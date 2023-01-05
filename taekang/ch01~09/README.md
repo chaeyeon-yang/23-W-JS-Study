@@ -166,3 +166,70 @@ console.log(`My name is ${first} ${last}.`); // My name is Tae-kang Kim.
 # Chapter.08 제어문
 
 > 제어문은 조건에 따라 코드 블록을 실행하거나 반복 실행할 때 사용한다.
+
+# Chapter.09 타입 변환과 단축 평가
+
+> 개발자가 **의도적으로 값의 타입을 변환하는 것**을 **명시적 타입 변환**(explicit coercion) 또는 **타입 캐스팅**(type casting)이라 한다.
+
+> 개발자의 **의도와 상관없이 표현식을 평가하는 도중에 자바스크립트 엔진에 의해 암묵적으로 타입이 자동 변환 되는 것**을 **암묵적 타입 변환**(implicit coercion) 또는 **타입 강제 변환**(type coercion)이라 한다.
+
+**`💡 암묵적 타입 변환은 기존 변수 값을 재할당하여 변경하는 것이 아니다.`** 
+
+자바스크립트 엔진은 표현식을 에러없이 평가하기 위해 피연산자의 값을 암묵적 타입 변환해 새로운 타입의 값을 만들어 단 한번 사용하고 버린다.
+
+
+## 논리 연산자를 사용한 단축 평가
+
+> 표현식을 평가하는 도중에 평가 결과가 확정된 경우 나머지 평가 과정을 생략하는 것을 **단축 평가**(short-circuit evaluation)라 한다.
+
+| 단축 평가 표현식 | 평가 결과 |
+| --- | --- |
+| true II anything | true |
+| false II anything | anything |
+| true && anything | anything |
+| false && anything | false |
+
+**`💡 객체는 키(key)와 값(value)으로 구성된 프로퍼티(property)의 집합이다.
+만약 객체를 가리키기를 기대하는 변수의 값이 객체가 아니라 null 또는 undefinde인 경우 객체의 프로퍼티를 참조하면 타입 에러(TypeError)가 발생한다.`**
+
+**`💡 함수를 호출할 때 인수를 전달하지 않으면 매개변수에는 undefined가 할당된다.
+이때 단축 평가를 사용해 매개변수의 기본값을 설정하면 undefinde로 인해 발생할 수 있는 에러를 방지할 수 있다.`**
+
+```jsx
+// 단축 평가를 사용한 매개변수의 기본값 설정
+function getStringLength(str) {
+  str = str || "";
+  return str.length;
+}
+
+getStringLength(); // -> 0
+getStringLength("hi"); // -> 2
+
+// ES6의 매개변수의 기본값 설정
+function getStringLength(str = "") {
+  return str.length;
+}
+
+getStringLength(); // -> 0
+getStringLength("hi"); // -> 2
+```
+
+## 옵셔널 체이닝 연산자
+
+> ES11(ECMASciprt2020)에서 도입된 **옵셔널 체이닝**(optional chaining) 연산자 `?.`는 좌항의 피연산자가 null 또는 undefined인 경우 undefined를 반환하고, 그렇지 않으면 우항의 프로퍼티 참조를 이어간다.
+
+**`옵셔널 체이닝 연산자 ?.는 객체를 가리키기를 기대하는 변수가 null 또는 undefined가 아닌지 확인하고 프로퍼티를 참조할 때 유용하다.`**
+
+```jsx
+let elem  null;
+
+// elem이 nul 또는 undefined이면 undefined를 반환하고, 그렇지 않으면 우항이 프로퍼티 참조를 이어간다.
+let value = elem?.value;
+console.log(value); // undefined
+```
+
+## null 병합 연산자
+
+> ES11(ECMASciprt2020)에서 도입된 **null 병합**(nullish coalescing) 연산자 `??`는 좌항의 피연산자가 null 또는 undefined인 경우 우항의 피연산자를 반환하고, 그렇지 않으면 좌항의 피연산자를 반환한다.
+
+**`null 병합 연산자 ??는 변수에 기본값을 설정할 때 유용하다.`**
